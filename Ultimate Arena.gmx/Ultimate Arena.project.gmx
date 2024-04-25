@@ -332,6 +332,7 @@
     <font>fonts\font4</font>
     <font>fonts\font_board</font>
     <font>fonts\fnt_headline</font>
+    <font>fonts\fnt_headline_s</font>
   </fonts>
   <objects name="objects">
     <objects name="Menus &amp; Setup">

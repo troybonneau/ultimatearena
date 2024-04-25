@@ -6,7 +6,7 @@ with(zui_create(WS/2-WS*.1,HS/2,obj_uiWindow,-1))
 {
     wID = "Ultimate News";
     callback = arena_ui;
-    zui_set_size(600,600);
+    zui_set_size(600,624);
     with(zui_create(0,0,obj_uiWindowCaption))
     {
         caption = "Ultimate News";
