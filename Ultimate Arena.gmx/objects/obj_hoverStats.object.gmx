@@ -133,14 +133,14 @@ if(instance_exists(global.mapwindow))
         
         yPos -= 24;
         
-        show_debug_message("XPOS: " + string(xPos));
-        show_debug_message("YPOS: " + string(yPos));
+        //show_debug_message("XPOS: " + string(xPos));
+        //show_debug_message("YPOS: " + string(yPos));
         //show_debug_message("XPOS: " + string(xPos));
         //show_debug_message("XPOS: " + string(xPos));
         
         c = instance_nearest(xPos,yPos,obj_fighter)
-        show_debug_message("CXPOS: " + string(c.x));
-        show_debug_message("CYPOS: " + string(c.y));
+        //show_debug_message("CXPOS: " + string(c.x));
+        //show_debug_message("CYPOS: " + string(c.y));
         if(instance_exists(c))
         {
             var dis = 10 * (global.gs)

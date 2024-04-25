@@ -39,32 +39,30 @@ with(zui_create(WS/2-WS*.1,HS/2,obj_uiWindow,-1))
 
     with (zui_create(0, 24, obj_uiImage)) 
     {
+        width = 150;
+        height = 150;
+        fID = other.fID
+        other.xID = id;
+        type = 2;
+        image = obj_arenaController.realmap;
+        
         if(other.fID < 0)
         {
             show_debug_message(string(other.fighter));
             var xPos = global.DEADLOC[other.fighter,0]
             var yPos = global.DEADLOC[other.fighter,1]
-            type = 2;
-            image = obj_arenaController.realmap;
+
             left = xPos;
             top = yPos;
             show_debug_message(string(left));
             show_debug_message(string(top));
-            width = 150;
-            height = 150;
-            fID = other.fID
-            other.xID = id;
         }
         else
         {
-            type = 2;
-            image = obj_arenaController.realmap;
             left = other.fID.x - 75 - (500 - (other.fID.x - 75));
             top = other.fID.y - 75- (500 - (other.fID.y - 75));
             width = 150;
             height = 150;
-            fID = other.fID
-            other.xID = id;
         }
     }
     

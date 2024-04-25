@@ -38,6 +38,7 @@ callback = -1;
 iID = -1;
 imgFrame = 0;
 imgSpeed = 0;
+script = -1;
 // 0 for sprite, 1 for background, 2 for surface
 </string>
           </argument>
@@ -62,12 +63,12 @@ imgSpeed = 0;
           <argument>
             <kind>1</kind>
             <string>draw_set_color(color);
-
-if(!sprite_exists(image))
-    exit;
     
 if (type == 0)
 {
+    if(!sprite_exists(image))
+        exit;
+    
     draw_sprite_ext(image,imgFrame,0,0,scale,scale,0,color,alpha);
 }
 else if (type == 1)
@@ -82,7 +83,7 @@ else if (type == 2 &amp;&amp; width == 0)
 else if (type == 2)
 {
     if(surface_exists(image))
-        draw_surface_part(image,left,top,width,height,0,0);
+        draw_surface_part(image,floor(left),floor(top),width,height,0,0);
 }
 else if (type == 3)
 {

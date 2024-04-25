@@ -205,6 +205,7 @@ instance_create(x,y,obj_deadLocation);
 global.DEADLOC[fighterID,0] = x;
 global.DEADLOC[fighterID,1] = y;
     
+surface_free(fighterSurf);
 
 </string>
           </argument>
