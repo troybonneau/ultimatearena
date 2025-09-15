@@ -14,14 +14,6 @@ if(is_array(global.cIMAGES)){
 }
 global.cIMAGES = 0;
 
-if(is_array(global.cIMAGES)){
-    for(var i=0; i<array_length_1d(global.cIMAGES); i++){
-        if(global.cIMAGES[i] != spr_defaultFighterImage)
-            sprite_delete(global.cIMAGES[i]);
-    }
-}
-global.cIMAGES = 0;
-
 directory = 0;
 directory[0] = "";
 var l = initialize_directory("characters");
