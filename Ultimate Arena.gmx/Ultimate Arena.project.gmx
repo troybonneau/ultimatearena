@@ -325,6 +325,12 @@
     <script>scripts\generate_news.gml</script>
     <script>scripts\buffer_get_height.gml</script>
     <script>scripts\color_randomize.gml</script>
+    <script>scripts\mapcamera_constants.gml</script>
+    <script>scripts\mapcamera_get_ground_height.gml</script>
+    <script>scripts\mapcamera_focus_position.gml</script>
+    <script>scripts\mapcamera_focus_on_fighter.gml</script>
+    <script>scripts\mapcamera_update_chopper_button.gml</script>
+    <script>scripts\mapcamera_set_mode.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\font0</font>

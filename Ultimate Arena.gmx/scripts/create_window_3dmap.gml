@@ -39,6 +39,14 @@ with(zui_create(WS/2-WS*.1,HS/2,obj_uiWindow,-1))
         callback = arena_ui;
         bID = 67;
     }
-    
+    with (zui_create(5 , 59, obj_uiButton))
+    {
+        zui_set_anchor(0,0);
+        zui_set_size(150, 24);
+        caption = "Chopper Gunner (Off)";
+        callback = arena_ui;
+        bID = 68;
+    }
+
     zui_create(0,0,obj_uiExitButton,-1);
 }

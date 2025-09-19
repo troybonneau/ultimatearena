@@ -147,42 +147,35 @@ with (obj_uiButton)
         {
             with(obj_fighter)
                 cameraFollow = 0;
-            with(obj_mapcamera)
-            {
-                followRandom = false;
-                followFighter = noone;
-                followFighterId = -1;
-                cx = 256;
-                cy = 256;
-                cz = buffer_get_height(obj_maptest.hBuff,cx,cy) * 128 / 255;
-            }
-            
+            mapcamera_set_mode(MAPCAMERA_MODE_CENTER);
+
         }
         if(bID == 66)
         {
             with(obj_fighter)
                 cameraFollow = 0;
-            with(obj_mapcamera)
-            {
-                followCPU = false;
-                followRandom = true;
-                followFighter = noone;
-                followFighterId = -1;
-            }
-            
+            mapcamera_set_mode(MAPCAMERA_MODE_RANDOM);
+
         }
         if(bID == 67)
         {
             with(obj_fighter)
                 cameraFollow = 0;
+            mapcamera_set_mode(MAPCAMERA_MODE_CPU);
+
+        }
+        if(bID == 68)
+        {
+            with(obj_fighter)
+                cameraFollow = 0;
+            var _enable = true;
             with(obj_mapcamera)
-            {
-                followCPU = true;
-                followRandom = true;
-                followFighter = noone;
-                followFighterId = -1;
-            }
-            
+                _enable = !chopperMode;
+
+            if(_enable)
+                mapcamera_set_mode(MAPCAMERA_MODE_CHOPPER);
+            else
+                mapcamera_set_mode(MAPCAMERA_MODE_FREE);
         }
         if (bID == 70)
         {
@@ -294,8 +287,132 @@ with (obj_uiWindow)
         if(wID == "3D Map")
         {
             draw_surface_stretched(obj_mapcamera.Surf3D,0,24,HS*(512/720)*global.gs,HS*(512/720)*global.gs);
+            var _mapWidth = HS*(512/720)*global.gs;
+            var _mapHeight = _mapWidth;
+            var _mapX = 0;
+            var _mapY = 24;
+
+            chopperActive = false;
+            with(obj_mapcamera)
+                if(chopperMode)
+                    other.chopperActive = true;
+
+            if(chopperActive)
+            {
+                var _cx = _mapX + _mapWidth/2;
+                var _cy = _mapY + _mapHeight/2;
+                var _arm = _mapWidth/12;
+                var _gap = _mapWidth/36;
+
+                draw_set_alpha(0.85);
+                draw_set_color(c_white);
+                draw_line_width(_cx - _arm, _cy, _cx - _gap, _cy, 2);
+                draw_line_width(_cx + _gap, _cy, _cx + _arm, _cy, 2);
+                draw_line_width(_cx, _cy - _arm, _cx, _cy - _gap, 2);
+                draw_line_width(_cx, _cy + _gap, _cx, _cy + _arm, 2);
+                draw_circle(_cx, _cy, _gap, true);
+                draw_set_alpha(1);
+                draw_set_halign(fa_middle);
+                draw_set_valign(fa_top);
+                draw_set_font(font0);
+                draw_text(_cx, _mapY + 8, "Drag the joystick on the map to move the crosshair");
+
+                var _windowLeft = __dx - __ax * __sx;
+                var _windowTop = __dy - __ay * __sy;
+                var _localMouseX = (global.__zui_mx - _windowLeft) / __sx;
+                var _localMouseY = (global.__zui_my - _windowTop) / __sy;
+
+                var _stickRadius = _mapWidth / 8;
+                var _stickMargin = _mapWidth / 18;
+                var _stickCenterX = _mapX + _mapWidth - _stickMargin - _stickRadius;
+                var _stickCenterY = _mapY + _mapHeight - _stickMargin - _stickRadius;
+                var _thumbRadius = _stickRadius * 0.35;
+
+                var _pointerDown = device_mouse_check_button(0, mb_left);
+                var _dxStick = _localMouseX - _stickCenterX;
+                var _dyStick = _localMouseY - _stickCenterY;
+                var _distance = sqrt(_dxStick * _dxStick + _dyStick * _dyStick);
+
+                var _stickVecX = 0;
+                var _stickVecY = 0;
+                var _stickHeld = false;
+
+                with(obj_mapcamera)
+                {
+                    _stickVecX = chopperStickVecX;
+                    _stickVecY = chopperStickVecY;
+                    _stickHeld = chopperStickHeld;
+                }
+
+                if(_pointerDown)
+                {
+                    if(_stickHeld || _distance <= _stickRadius)
+                    {
+                        var _normX = 0;
+                        var _normY = 0;
+
+                        if(_distance > 0)
+                        {
+                            var _scale = min(_distance, _stickRadius) / _stickRadius;
+                            _normX = (_dxStick / _distance) * _scale;
+                            _normY = (_dyStick / _distance) * _scale;
+                        }
+
+                        if(abs(_normX) < 0.05)
+                            _normX = 0;
+                        if(abs(_normY) < 0.05)
+                            _normY = 0;
+
+                        with(obj_mapcamera)
+                        {
+                            chopperStickHeld = true;
+                            chopperStickVecX = clamp(_normX, -1, 1);
+                            chopperStickVecY = clamp(_normY, -1, 1);
+                            chopperInputX = chopperStickVecX;
+                            chopperInputY = chopperStickVecY;
+                            other._stickVecX = chopperStickVecX;
+                            other._stickVecY = chopperStickVecY;
+                        }
+
+                        _stickHeld = true;
+                    }
+                }
+                else if(_stickHeld)
+                {
+                    with(obj_mapcamera)
+                    {
+                        chopperStickHeld = false;
+                        chopperStickVecX = 0;
+                        chopperStickVecY = 0;
+                        chopperInputX = 0;
+                        chopperInputY = 0;
+                        other._stickVecX = 0;
+                        other._stickVecY = 0;
+                    }
+                    _stickVecX = 0;
+                    _stickVecY = 0;
+                    _stickHeld = false;
+                }
+
+                var _thumbX = _stickCenterX + _stickVecX * (_stickRadius - _thumbRadius);
+                var _thumbY = _stickCenterY + _stickVecY * (_stickRadius - _thumbRadius);
+
+                draw_set_alpha(0.35);
+                draw_set_color(c_black);
+                draw_circle(_stickCenterX, _stickCenterY, _stickRadius, false);
+                draw_set_alpha(1);
+                draw_set_color(c_white);
+                draw_circle(_stickCenterX, _stickCenterY, _stickRadius, true);
+
+                draw_set_alpha(_stickHeld ? 0.9 : 0.7);
+                draw_set_color(make_color_rgb(180, 220, 255));
+                draw_circle(_thumbX, _thumbY, _thumbRadius, false);
+                draw_set_alpha(1);
+                draw_set_color(c_white);
+                draw_circle(_thumbX, _thumbY, _thumbRadius, true);
+            }
             draw_set_font(font0);
-            
+
             if(instance_exists(obj_arenaEvent))
             {
                 var fl = floor(HS*(512/720) *global.gs) + 24
